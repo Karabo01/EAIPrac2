@@ -215,11 +215,26 @@ for i in range(len(bfs)):
     print(str(i) + " out of " + str(len(bfs)) + " done")
 
 print("popo")
+Fitness(population)
 def GA(population):
     Fitness()
     Crossover(array)
 def Crossover(Altered):
     print("")
 
-def Fitness():
+def Fitness(populus,max):
+    p1 = 0
+    p2 = 0
+    for k in range(max-4):
+        for c in range(81):
+            if(populus[k][c] == populus[k+1][c]):
+                p1 += 1
+            if (populus[k+2][c] == populus[k+3][c]):
+                p2 += 1
+    if(p2 > p1):
+        populus.pop(k+2)
+        populus.pop(k+3)
+    if(p1 > p1):
+        populus.pop(k)
+        populus.pop(k+1)
     print()
