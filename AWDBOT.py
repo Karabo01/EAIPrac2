@@ -161,50 +161,19 @@ def convert(Char):
         return 3
     else:
         return 0
-
-def Crossover(Altered):
-    print("")
-    tempList = []
-    for r in range(len(Altered)-1):
-        for c in range (len(Altered)/2):
-            tempList.append(Altered[r][c])
-        for c in range (41):
-            Altered[r][c] = Altered[r+1][c]
-            Altered[r+1][c] = tempList[c]
-
-def Fitness(populus,max):
-    p1 = 0
-    p2 = 0
-    for r in range(max-4):
-        for c in range(len(populus[0])):
-            if(populus[r][c] == populus[r+1][c]):
-                p1 += 1
-            if (populus[r+2][c] == populus[r+3][c]):
-                p2 += 1
-        if(p2 > p1):
-            populus.pop(r+2)
-            populus.pop(r+3)
-        if(p1 >= p2):
-            populus.pop(r)
-            populus.pop(r+1)
-        r += 4
-        #print(len(populus[1]))
-        print(len(populus))
-        Crossover(populus)
 #reading data from csv file
 sequence_filename = "data1.csv"
 with open(sequence_filename, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
-print("Data extrapulated")
+print("Data extracted!!")
 tree = RPS()
 tree.putin(3)
 began=False
 bfs=[]
 twin=[]
 printLevelOrder(tree.rootNode,began)
-"""
 for i in range(len(bfs)-81):
     bfs.pop(0)
 
@@ -229,6 +198,7 @@ def populate():
     print("popo")
 temp=[]
 population = [[0 for i in range(81)] for j in range(max)]
+print("Generating Population")
 for i in range(len(bfs)):
     for j in range(len(data)):
         stringPl=str(data[j])
@@ -243,10 +213,50 @@ for i in range(len(bfs)):
         else:
             break
 
-    print(str(i) + " out of " + str(len(bfs)) + " done")
+    print("=", end="")
+print("Population Generated")
+def GA(population,max):
+    while(len(population)>3):
+        Fitness(population,len(population))
+    
+
+def Crossover(Altered):
+    print("Starting: Cross Over ")
+    tempList = []
+    for r in range(len(Altered)-1):
+        for c in range (41):
+            tempList.append(Altered[r][c])
+        for c in range (41):
+            Altered[r][c] = Altered[r+1][c]
+            Altered[r+1][c] = tempList[c]
+        print("=", end="" )
+    print("Cross Over Completed!!")
+
+def Fitness(populus,max):
+    print("Calculating Fitness: ")
+    p1 = 0
+    p2 = 0
+    r=0
+    while(r<int(round(max/2))):
+        for c in range(len(populus[0])):
+            if(populus[r][c] == populus[r+1][c]):
+                p1 += 1
+            if (populus[r+2][c] == populus[r+3][c]):
+                p2 += 1
+        if(p2 > p1):
+            populus.pop(r+2)
+            populus.pop(r+3)
+        elif(p1 >= p2):
+            populus.pop(r)
+            populus.pop(r+1)
+        r += 4
+        p1 = 0
+        p2 = 0
+        print("=", end="")
+    print("Fitness Completed")
+    print("Length of new population is: "+str(len(populus)))
+    Crossover(populus)
 
 
-
-print("popo")
-Fitness(population,max)
-"""
+GA(population,max)
+print("GA Completed ")
