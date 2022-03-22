@@ -1,6 +1,7 @@
 
 import numpy as np
 import csv
+import random
 
 
 class Node(object):
@@ -161,64 +162,18 @@ def convert(Char):
         return 3
     else:
         return 0
-#reading data from csv file
-sequence_filename = "data1.csv"
-with open(sequence_filename, newline='') as f:
-    reader = csv.reader(f)
-    data = list(reader)
+def Random():
+    return random.choice(["R", "P", "S"])
 
-print("Data extracted!!")
-tree = RPS()
-tree.putin(3)
-began=False
-bfs=[]
-twin=[]
-printLevelOrder(tree.rootNode,began)
-for i in range(len(bfs)-81):
-    bfs.pop(0)
-
-for i in range(len(bfs)):
-    twin.append(0)
-
-for i in range(len(data)):
-    stringPl=""
-    for j in range(len(bfs)):
-        stringPl=str(data[i])
-        if(bfs[j]==stringPl[2:6]):
-            twin[j]+=1
-            break
-
-max=0
-for i in range(len(twin)):
-    if(twin[i]>max):
-        max=twin[i]
-
-
-def populate():
-    print("popo")
-temp=[]
-population = [[0 for i in range(81)] for j in range(max)]
-print("Generating Population")
-for i in range(len(bfs)):
-    for j in range(len(data)):
-        stringPl=str(data[j])
-        if(bfs[i]==stringPl[2:6]):
-            temp.append(data[j])
-    #here
-
-    for j in range(max):
-        if(j<len(temp)):
-            play=str(temp[j])
-            population[j][i]= convert(play[10:11])
-        else:
-            break
-
-    print("=", end="")
-print("Population Generated")
+def Mutation():
+    for i in range(len(population)):
+        for j in range(81):
+            population[i][j]=convert(Random())
+        i+=4
 def GA(population,max):
     while(len(population)>3):
         Fitness(population,len(population))
-    
+
 
 def Crossover(Altered):
     print("Starting: Cross Over ")
@@ -256,6 +211,61 @@ def Fitness(populus,max):
     print("Fitness Completed")
     print("Length of new population is: "+str(len(populus)))
     Crossover(populus)
+
+
+#reading data from csv file
+sequence_filename = "data1.csv"
+with open(sequence_filename, newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+
+print("Data extracted!!")
+tree = RPS()
+tree.putin(3)
+began=False
+bfs=[]
+twin=[]
+printLevelOrder(tree.rootNode,began)
+for i in range(len(bfs)-81):
+    bfs.pop(0)
+
+for i in range(len(bfs)):
+    twin.append(0)
+
+for i in range(len(data)):
+    stringPl=""
+    for j in range(len(bfs)):
+        stringPl=str(data[i])
+        if(bfs[j]==stringPl[2:6]):
+            twin[j]+=1
+            break
+
+max=0
+for i in range(len(twin)):
+    if(twin[i]>max):
+        max=twin[i]
+
+
+temp=[]
+population = [[0 for i in range(81)] for j in range(max)]
+print("Generating Population")
+for i in range(len(bfs)):
+    for j in range(len(data)):
+        stringPl=str(data[j])
+        if(bfs[i]==stringPl[2:6]):
+            temp.append(data[j])
+    #here
+
+    for j in range(max):
+        if(j<len(temp)):
+            play=str(temp[j])
+            population[j][i]= convert(play[10:11])
+        else:
+            break
+
+    print("=", end="")
+print("Population Generated")
+
 
 
 GA(population,max)
