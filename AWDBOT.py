@@ -1,4 +1,4 @@
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 import numpy as np
 import csv
 
@@ -204,7 +204,14 @@ for i in range(len(bfs)):
         if(bfs[i]==stringPl[2:6]):
             temp.append(data[j])
     #here
-    
+
     for j in range(max):
-        play=str(temp[j])
-        population[j][i]= convert(play[7:8])
+        if(j<len(temp)):
+            play=str(temp[j])
+            population[j][i]= convert(play[10:11])
+        else:
+            break
+
+    print(str(i) + " out of " + str(len(bfs)) + " done")
+
+print("popo")
