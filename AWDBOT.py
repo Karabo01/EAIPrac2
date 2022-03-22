@@ -216,6 +216,7 @@ for i in range(len(bfs)):
 
 print("popo")
 def GA(population):
+    Fitness()
     Crossover(array)
 def Crossover(Altered):
     print("")
