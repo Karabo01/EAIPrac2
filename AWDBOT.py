@@ -162,7 +162,7 @@ def convert(Char):
     else:
         return 0
 #reading data from csv file
-sequence_filename = "data1.csv"
+sequence_filename = "AWD.csv"
 with open(sequence_filename, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
@@ -213,28 +213,38 @@ for i in range(len(bfs)):
             break
 
     print(str(i) + " out of " + str(len(bfs)) + " done")
-
-print("popo")
-Fitness(population)
 def GA(population):
     Fitness()
     Crossover(array)
 def Crossover(Altered):
     print("")
+    tempList = []
+    for r in range(len(Altered)-1):
+        for c in range (len(Altered)/2):
+            tempList.append(Altered[r][c])
+        for c in range (41):
+            Altered[r][c] = Altered[r+1][c]
+            Altered[r+1][c] = tempList[c]
 
 def Fitness(populus,max):
     p1 = 0
     p2 = 0
-    for k in range(max-4):
-        for c in range(81):
-            if(populus[k][c] == populus[k+1][c]):
+    for r in range(max-4):
+        for c in range(len(populus[0])):
+            if(populus[r][c] == populus[r+1][c]):
                 p1 += 1
-            if (populus[k+2][c] == populus[k+3][c]):
+            if (populus[r+2][c] == populus[r+3][c]):
                 p2 += 1
-    if(p2 > p1):
-        populus.pop(k+2)
-        populus.pop(k+3)
-    if(p1 > p1):
-        populus.pop(k)
-        populus.pop(k+1)
-    print()
+        if(p2 > p1):
+            populus.pop(r+2)
+            populus.pop(r+3)
+        if(p1 >= p2):
+            populus.pop(r)
+            populus.pop(r+1)
+        r += 4
+        #print(len(populus[1]))
+        print(len(populus))
+        crossover(populus)
+
+print("popo")
+Fitness(population,max)
