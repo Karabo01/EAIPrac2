@@ -197,7 +197,7 @@ with open(sequence_filename, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
-
+print("Data extrapulated")
 tree = RPS()
 tree.putin(3)
 began=False
