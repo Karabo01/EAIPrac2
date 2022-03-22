@@ -197,13 +197,14 @@ with open(sequence_filename, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
-"""
+
 tree = RPS()
 tree.putin(3)
 began=False
 bfs=[]
 twin=[]
 printLevelOrder(tree.rootNode,began)
+"""
 for i in range(len(bfs)-81):
     bfs.pop(0)
 
