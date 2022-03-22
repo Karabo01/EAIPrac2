@@ -215,3 +215,10 @@ for i in range(len(bfs)):
     print(str(i) + " out of " + str(len(bfs)) + " done")
 
 print("popo")
+def GA(population):
+    Crossover(array)
+def Crossover(Altered):
+    print("")
+
+def Fitness():
+    print()
