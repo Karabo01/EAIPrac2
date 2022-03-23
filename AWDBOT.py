@@ -2,7 +2,7 @@
 import numpy as np
 import csv
 import random
-
+import matplotlib.pyplot as plt
 
 class Node(object):
 
@@ -88,7 +88,7 @@ def printLevelOrder(root, began):
 
 
 # Print nodes at a current level
-def printCurrentLevel(root, level, began):
+def printCurrentLevel(root, level, began):#Prints leves of BFS
     temp = root
 
     allParents = ""
@@ -114,7 +114,7 @@ def printCurrentLevel(root, level, began):
 """
 
 
-def printP(node, play):
+def printP(node, play):#Prints parents of tree
     if node is None:
         return ""
     elif node.parent is None:
@@ -127,7 +127,7 @@ def printP(node, play):
         return play
 
 
-def rheight(node):
+def rheight(node):#Computes right subtree height
     Rheight=0
     if node is None:
         return 0
@@ -137,7 +137,7 @@ def rheight(node):
             Rheight+=1
         return Rheight
 
-def height(node):
+def height(node):#Computes height of tree
     if node is None:
         return 0
     else:
@@ -152,8 +152,16 @@ def height(node):
             return cheight+1
         else:
             return rheight+1
-
-def convert(Char):
+def reConvert(val):#Converts integers into RPS
+    if val==1:
+        return 'R'
+    if val==2:
+        return 'P'
+    if val==3:
+        return 'S'
+    else:
+        return Random()
+def convert(Char):#Converts RPS into integers
     if Char=="R":
         return 1
     if Char=="P":
@@ -162,20 +170,56 @@ def convert(Char):
         return 3
     else:
         return 0
-def Random():
+def Random():#Produces random gene
     return random.choice(["R", "P", "S"])
 
-def Mutation():
-    for i in range(len(population)):
+def RandomNum():#Produces random gene as integer
+    return random.choice([1, 2, 3])
+
+def Mutation(pop,factor):#Mutaion done by creating random gened individuals
+    i=0
+    print("Mutation Initiated!!")
+    while(i<len(pop)):
         for j in range(81):
-            population[i][j]=convert(Random())
-        i+=4
-def GA(population,max):
-    while(len(population)>3):
-        Fitness(population,len(population))
+            pop[i][j]=convert(Random())
+        i+=factor
+        print(str(i-4)+"=", end="")
+    print("Mutation Completed!!")
 
 
-def Crossover(Altered):
+
+def GA(population,max):#Genetic Algorithm
+    generation=[]
+
+    i=0
+    fitness=[]
+    final=[]
+    while(len(population)>3):#fitness computed until population is left with 3 indviduals
+        i+=1
+        generation.append(i)
+        fitness.append(Fitness(population,len(population)))
+    cvs=[]
+    final=(finalForm(population))
+    for j in range(len(final)):
+        cvs.append(reConvert(final[j]))
+    filename="AWD.txt"
+
+    with open(filename, 'w') as csvfile: # Write data to text file
+        csvwriter= csv.writer(csvfile)
+        csvwriter.writerow(cvs)
+
+
+    #Plot generation fitness
+    plt.figure('Fitness of the best individual from each generation')
+    plt.plot(generation, fitness)
+    plt.title('Fitness vs Generation')
+    plt.xlabel('Generation')
+    plt.ylabel('Fitness')
+    plt.show()
+
+
+
+def Crossover(Altered):#Function for mating two individuals
     print("Starting: Cross Over ")
     tempList = []
     for r in range(len(Altered)-1):
@@ -184,26 +228,92 @@ def Crossover(Altered):
         for c in range (41):
             Altered[r][c] = Altered[r+1][c]
             Altered[r+1][c] = tempList[c]
+    tempList.clear()
+    for r in range(len(Altered) - 2):
+        for c in range (81):
+            tempList.append(Altered[r][c])
+        for c in range (81):
+            Altered[r][c] = Altered[r+2][c]
+            Altered[r+2][c] = tempList[c]
         print("=", end="" )
     print("Cross Over Completed!!")
 
-def Fitness(populus,max):
+
+def finalForm(populus):#Function to determin fittest individual out of final 3
+    finalPop = []
+    if(len(populus) == 3):
+        for t in range(len(populus[0])):
+            if populus[0][t] == populus[1][t]:
+                finalPop.append(populus[0][t])
+            else:
+                if populus[2][t] != 0:
+                    finalPop.append(populus[2][t])
+                else:
+                    if ((populus[0][t] == 1 and populus[1][t] == 2) or (populus[0][t] == 2 and populus[1][t] == 1)):
+                        finalPop.append(3)
+                    elif ((populus[0][t] == 1 and populus[1][t] == 3) or (populus[0][t] == 3 and populus[1][t] == 1)):
+                        finalPop.append(2)
+                    elif ((populus[0][t] == 3 and populus[1][t] == 2) or (populus[0][t] == 2 and populus[1][t] == 3)):
+                        finalPop.append(1)
+                    elif ((populus[0][t] == 1 and populus[2][t] == 2) or (populus[0][t] == 2 and populus[2][t] == 1)):
+                        finalPop.append(3)
+                    elif ((populus[0][t] == 1 and populus[2][t] == 3) or (populus[0][t] == 3 and populus[2][t] == 1)):
+                        finalPop.append(2)
+                    elif ((populus[0][t] == 3 and populus[2][t] == 2) or (populus[0][t] == 2 and populus[2][t] == 3)):
+                        finalPop.append(1)
+                    elif ((populus[2][t] == 1 and populus[1][t] == 2) or (populus[2][t] == 2 and populus[1][t] == 1)):
+                        finalPop.append(3)
+                    elif ((populus[2][t] == 1 and populus[1][t] == 3) or (populus[2][t] == 3 and populus[1][t] == 1)):
+                        finalPop.append(2)
+                    elif ((populus[2][t] == 3 and populus[1][t] == 2) or (populus[2][t] == 2 and populus[1][t] == 3)):
+                        finalPop.append(1)
+                    else:
+                        finalPop.append(random.choice([1, 2, 3]))
+
+    else:
+        for t in range(len(populus[0])):
+            if populus[0][t] == populus[1][t]:
+                finalPop.append(populus[0][t])
+            else:
+                if(populus[0][t]==0 and populus[1][t]==0):
+                    finalPop.append(random.choice([1, 2, 3]))
+                elif populus[0][t]==0:
+                    finalPop.append(populus[1][t])
+                elif populus[1][t]==0:
+                    finalPop.append(populus[0][t])
+                elif((populus[0][t] == 1 and populus[1][t] == 2) or (populus[0][t] == 2 and populus[1][t] == 1)):
+                    finalPop.append(3)
+                elif((populus[0][t] == 1 and populus[1][t] == 3) or (populus[0][t] == 3 and populus[1][t] == 1)):
+                    finalPop.append(2)
+                elif((populus[0][t] == 3 and populus[1][t] == 2) or (populus[0][t] == 2 and populus[1][t] == 3)):
+                    finalPop.append(1)
+    return finalPop
+
+
+def Fitness(populus,max):# fitness computed by getting most played genes
+    fitness=0
+
     print("Calculating Fitness: ")
     p1 = 0
     p2 = 0
     r=0
-    while(r<int(round(max/2))):
+    mutant = 0
+    while(r<int(round(max/8))):
         for c in range(len(populus[0])):
             if(populus[r][c] == populus[r+1][c]):
                 p1 += 1
             if (populus[r+2][c] == populus[r+3][c]):
                 p2 += 1
-        if(p2 > p1):
+        if(p2 < p1):
+            fitness=p1
             populus.pop(r+2)
             populus.pop(r+3)
-        elif(p1 >= p2):
+        elif(p1 <= p2):
+            fitness=p2
             populus.pop(r)
             populus.pop(r+1)
+        if(p1==p2):
+            mutant+=1
         r += 4
         p1 = 0
         p2 = 0
@@ -211,6 +321,11 @@ def Fitness(populus,max):
     print("Fitness Completed")
     print("Length of new population is: "+str(len(populus)))
     Crossover(populus)
+    x=10
+    if(mutant >= max/x):
+        Mutation(populus,x)
+
+    return fitness
 
 
 #reading data from csv file
@@ -219,12 +334,14 @@ with open(sequence_filename, newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
+
 print("Data extracted!!")
 tree = RPS()
 tree.putin(3)
 began=False
 bfs=[]
 twin=[]
+#aranging data according to BFS tree
 printLevelOrder(tree.rootNode,began)
 for i in range(len(bfs)-81):
     bfs.pop(0)
